@@ -1,10 +1,20 @@
-cmake_minimum_required(VERSION 3.10.2)
-project(zpr_placeholder)
+cmake_minimum_required(VERSION 2.8.12)
+project(python_cpp_example)
 
-find_package(Boost REQUIRED)
+SET(SOURCE_DIR "src/python_cpp_example")
+# Tell cmake that headers are in alse in source_dir
+include_directories(${SOURCE_DIR})
+SET(SOURCES "${SOURCE_DIR}/math.cpp")
 
-set(CMAKE_CXX_STANDARD 11)
+SET(TEST_DIR "tests")
+SET(TESTS ${SOURCES}
+    "${TEST_DIR}/test_main.cpp"
+    "${TEST_DIR}/test_math.cpp")
 
-include_directories(${Boost_INCLUDE_DIRS})
-link_libraries(${Boost_LIBRARIES})
-add_executable(zpr_placeholder main.cpp)
+# Generate a test executable
+include_directories(lib/catch/include)
+add_executable("${PROJECT_NAME}_test" ${TESTS})
+
+# Generate python module
+add_subdirectory(lib/pybind11)
+pybind11_add_module(python_cpp_example ${SOURCES} "${SOURCE_DIR}/bindings.cpp")
