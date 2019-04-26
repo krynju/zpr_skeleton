@@ -1,6 +1,6 @@
-[submodule "lib/pybind11"]
+[submodule "pybind11"]
 	path = lib/pybind11
 	url = https://github.com/pybind/pybind11.git
-[submodule "lib/catch"]
+[submodule "catch"]
 	path = lib/catch
 	url = https://github.com/philsquared/Catch.git
