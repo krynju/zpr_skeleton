@@ -10,6 +10,9 @@ venv
 *.egg-info
 __pycache__
 .eggs
+*.pyd
+*.pyd.manifest
+*.pdb
 
 # VS Code
 .vscode
