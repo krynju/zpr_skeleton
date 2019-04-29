@@ -1,3 +1,36 @@
+# info
+
+create a python3 venv and activate
+
+`python3 -m venv venv`
+
+shell `source venv/bin/activate` or 
+
+cmd `bin/Scripts/activate`
+
+
+install dependencies 
+
+`pip -r install requirements.txt`
+
+testing
+
+`python setup.py test`
+
+install and run
+
+`python setup.py install`
+
+`python -m python_cpp_example`
+
+
+on windows run from vs developer console for compiler env variables
+
+
+
+
+
+
 # python_cpp_example
 
 This repository contains an example Python module which wraps C++ code. The code presented here was designed to meet four requirements:
