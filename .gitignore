@@ -3,6 +3,8 @@ build
 docs/_build
 tests/bin
 dist
+venv
+.idea
 
 # Python
 *.egg-info
