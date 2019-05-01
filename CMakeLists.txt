@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.14.0)
 project(python_cpp_example)
 
-set( CMAKE_VERBOSE_MAKEFILE on )
+# set( CMAKE_VERBOSE_MAKEFILE on )
 
-find_package(Boost REQUIRED COMPONENTS python37)
-find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
+find_package(Boost REQUIRED COMPONENTS python37 numpy37)
+find_package(Python3 3.7 REQUIRED COMPONENTS Interpreter Development)
 
 SET(SOURCE_DIR "src/python_cpp_example")
 # Tell cmake that headers are in else in source_dir
