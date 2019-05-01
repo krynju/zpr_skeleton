@@ -16,7 +16,9 @@ also requires Boost.Python and Boost.Python.Numpy compiled
 
 On windows run from *Developer Command Prompt for VS 2017* for cl.exe environment variables
 
+When cloning remember about `--recursive flag`
 
+`git clone --recursive https://github.com/krynju/zpr_skeleton`
 
 Create a python3.7 venv and activate it
 
