@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(python_cpp_example)
 
+set( CMAKE_VERBOSE_MAKEFILE on )
+
+find_package(Boost REQUIRED COMPONENTS python37)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
+
 SET(SOURCE_DIR "src/python_cpp_example")
-# Tell cmake that headers are in alse in source_dir
+# Tell cmake that headers are in else in source_dir
 include_directories(${SOURCE_DIR})
 SET(SOURCES "${SOURCE_DIR}/math.cpp")
 
@@ -13,7 +18,13 @@ SET(TESTS ${SOURCES}
 
 # Generate a test executable
 include_directories(lib/catch/include)
+
+include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
 add_executable("${PROJECT_NAME}_test" ${TESTS})
+
+target_link_libraries("${PROJECT_NAME}_test" ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
+link_libraries(Boost::python37 ${PYTHON_LIBRARIES})
+
 
 # Generate python module
 add_subdirectory(lib/pybind11)

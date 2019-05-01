@@ -1,4 +1,6 @@
 #include "math.hpp"
+#include <boost/python.hpp>
+
 
 int add(int i, int j)
 {
