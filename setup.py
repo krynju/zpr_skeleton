@@ -55,6 +55,8 @@ class CMakeBuild(build_ext):
                 extdir)]
             if sys.maxsize > 2 ** 32:
                 cmake_args += ['-A', 'x64']
+            # build_args += ['--', 'link=static']
+
             # build_args += ['--', '/m']
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]

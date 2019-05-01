@@ -8,5 +8,6 @@ class MainTest(unittest.TestCase):
     def test_subtract(self):
         self.assertEqual(python_cpp_example.subtract(1, 1), 0)
 
+
 if __name__ == '__main__':
     unittest.main()
