@@ -8,3 +8,6 @@ int add(int i, int j);
     \param j an integer to subtract from \p i
 */
 int subtract(int i, int j);
+
+
+int numpy_check();
