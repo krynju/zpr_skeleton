@@ -49,7 +49,7 @@ class CMakeBuild(build_ext):
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
-            cmake_args += ['-GNMake Makefiles']
+            # cmake_args += ['-GNMake Makefiles']
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(
                 cfg.upper(),
                 extdir)]
@@ -79,7 +79,11 @@ class CMakeBuild(build_ext):
         if platform.system() == "Windows":
             test_filename = ''.join([test_filename, '.exe'])
 
-        test_bin = os.path.join(self.build_temp, test_filename)
+        if platform.system() == "Windows":
+            test_bin = os.path.join(self.build_temp, 'Release', test_filename)
+        else:
+            test_bin = os.path.join(self.build_temp, test_filename)
+
         self.copy_test_file(test_bin)
         print()  # Add an empty line for cleaner output
 
