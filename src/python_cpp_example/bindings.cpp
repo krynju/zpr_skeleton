@@ -13,17 +13,22 @@ py::module m("python_cpp_example", R"doc(
 	   add
 	   subtract
 )doc");
-	
+
 PYBIND11_MODULE(python_cpp_example, m) {
-  m.def("add", &add, R"doc(
+    m.def("add", &add, R"doc(
         Add two numbers
         
         Some other information about the add function.
     )doc");
 
-  m.def("subtract", &subtract, R"doc(
+    m.def("subtract", &subtract, R"doc(
         Subtract two numbers
 
         Some other information about the subtract function.
     )doc");
+
+    m.def("getint", &getint);
+
+    m.def("getint_direct", &getint_direct);
+
 }
