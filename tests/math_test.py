@@ -11,7 +11,9 @@ class MainTest(unittest.TestCase):
         self.assertEqual(python_cpp_example.subtract(1, 1), 0)
 
     def test_getint(self):
-        self.assertEqual(python_cpp_example.getint(np.array([1, 2, 3], dtype=int)), 2)
+        a = np.array([1, 2, 3], dtype=int)
+        self.assertEqual(python_cpp_example.getint(a), 2)
+        self.assertEqual(a[0], 7)
 
     def test_getint_direct(self):
         self.assertEqual(python_cpp_example.getint(np.array([1, 2, 3], dtype=int)), 2)
