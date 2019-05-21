@@ -17,7 +17,6 @@ py::module m("python_cpp_example", R"doc(
 PYBIND11_MODULE(python_cpp_example, m) {
     m.def("add", &add, R"doc(
         Add two numbers
-        
         Some other information about the add function.
     )doc");
 
@@ -30,5 +29,11 @@ PYBIND11_MODULE(python_cpp_example, m) {
     m.def("getint", &getint);
 
     m.def("getint_direct", &getint_direct);
+
+    m.def("increment_array", &increment_array);
+
+    m.def("create_tuple", &create_tuple);
+
+    m.def("generateQQ", &generateQQ);
 
 }
