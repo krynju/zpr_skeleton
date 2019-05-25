@@ -69,7 +69,7 @@ class CMakeBuild(build_ext):
                               cwd=self.build_temp)
 
         # Copy *_test file to tests directory
-        test_filename = 'python_cpp_example_test'
+        test_filename = 'distribution_test'
 
         if platform.system() == "Windows":
             test_filename = ''.join([test_filename, '.exe'])
@@ -101,7 +101,7 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    name='python_cpp_example',
+    name='distribution',
     version='0.0.1',
     author='',
     author_email='',
@@ -109,7 +109,7 @@ setup(
     long_description='',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    ext_modules=[CMakeExtension('python_cpp_example/python_cpp_example')],
+    ext_modules=[CMakeExtension('distribution/distribution')],
     cmdclass=dict(build_ext=CMakeBuild),
     test_suite='tests',
     zip_safe=False,

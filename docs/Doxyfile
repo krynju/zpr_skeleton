@@ -1,5 +1,5 @@
-PROJECT_NAME           = python_cpp_example
-INPUT                  = ../python_cpp_example/
+PROJECT_NAME           = distribution
+INPUT                  = ../distribution/
 
 GENERATE_HTML          = NO
 GENERATE_LATEX         = NO

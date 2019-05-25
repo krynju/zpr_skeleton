@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.13.0)
-project(python_cpp_example)
+project(distribution)
 
 find_package(Python3 3.7 REQUIRED COMPONENTS Interpreter Development)
 add_subdirectory(lib/pybind11)
 
 
-SET(SOURCE_DIR "src/python_cpp_example")
+SET(SOURCE_DIR "src/distribution")
 # Tell cmake that headers are in else in source_dir
 include_directories(${SOURCE_DIR})
 SET(SOURCES "${SOURCE_DIR}/math.cpp")
@@ -27,5 +27,5 @@ target_link_libraries("${PROJECT_NAME}_test" Python3::Python pybind11::module)
 
 
 # Generate python module
-pybind11_add_module(python_cpp_example ${SOURCES} "${SOURCE_DIR}/bindings.cpp" )
-target_link_libraries(python_cpp_example PRIVATE Python3::Python)
+pybind11_add_module(distribution ${SOURCES} "${SOURCE_DIR}/bindings.cpp" )
+target_link_libraries(distribution PRIVATE Python3::Python)

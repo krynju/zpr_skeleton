@@ -3,10 +3,10 @@
 
 namespace py = pybind11;
 
-py::module m("python_cpp_example", R"doc(
+py::module m("distribution", R"doc(
 	Python module
 	-----------------------
-	.. currentmodule:: python_cpp_example
+	.. currentmodule:: distribution
 	.. autosummary::
 	   :toctree: _generate
 	   
@@ -14,7 +14,7 @@ py::module m("python_cpp_example", R"doc(
 	   subtract
 )doc");
 
-PYBIND11_MODULE(python_cpp_example, m) {
+PYBIND11_MODULE(distribution, m) {
     m.def("add", &add, R"doc(
         Add two numbers
         Some other information about the add function.
