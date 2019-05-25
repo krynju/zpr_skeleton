@@ -63,6 +63,14 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
+        build_site = False  # todo: temp
+        if build_site:
+            # SITE BUILD
+            subprocess.check_call('npm install', cwd='lib/site', shell=True)
+            subprocess.check_call(['npm', 'run', 'ng', 'build', '--prod'], cwd='lib/site', shell=True)
+            # copy files
+            #
+
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args,
                               cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args,
