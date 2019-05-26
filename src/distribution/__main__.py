@@ -1,3 +1,3 @@
-import distribution
+from .app import app
 
-print("hey")
+app.run()

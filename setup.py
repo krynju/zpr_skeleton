@@ -6,12 +6,14 @@ import sys
 import sysconfig
 import platform
 import subprocess
+from os import listdir
+from os.path import isfile, join
 
 from distutils.version import LooseVersion
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 from setuptools.command.test import test as TestCommand
-from shutil import copyfile, copymode
+from shutil import copyfile, copymode, rmtree
 
 
 class CMakeExtension(Extension):
@@ -67,8 +69,24 @@ class CMakeBuild(build_ext):
         if build_site:
             # SITE BUILD
             subprocess.check_call('npm install', cwd='lib/site', shell=True)
-            subprocess.check_call(['npm', 'run', 'ng', 'build', '--prod'], cwd='lib/site', shell=True)
-            # copy files
+            subprocess.check_call('npm run ng build -- --prod --base-href ../static/', cwd='lib/site', shell=True)
+
+            mypath = 'lib/site/dist/zprsite/'
+            onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+
+            if os.path.exists('src/distribution/static/'):
+                rmtree('src/distribution/static/')
+                os.makedirs('src/distribution/static/')
+            if os.path.exists('src/distribution/templates/'):
+                rmtree('src/distribution/templates/')
+                os.makedirs('src/distribution/templates/')
+
+            for f in filter(lambda x: x != 'index.html', onlyfiles):
+                copyfile(mypath + f, 'src/distribution/static/' + f)
+
+            copyfile(mypath + 'index.html', 'src/distribution/templates/' + 'index.html')
+
+            # copy files and change path
             #
 
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args,
@@ -121,4 +139,5 @@ setup(
     cmdclass=dict(build_ext=CMakeBuild),
     test_suite='tests',
     zip_safe=False,
+    include_package_data=True,
 )

@@ -1,0 +1,2 @@
+graft src/distribution/static
+graft src/distribution/templates
