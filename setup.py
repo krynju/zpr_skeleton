@@ -65,11 +65,11 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
-        build_site = False  # todo: temp
+        build_site = True  # todo: temp
         if build_site:
             # SITE BUILD
             subprocess.check_call('npm install', cwd='lib/site', shell=True)
-            subprocess.check_call('npm run ng build -- --prod --base-href ../static/', cwd='lib/site', shell=True)
+            subprocess.check_call('npm run ng build -- --prod --base-href ./', cwd='lib/site', shell=True)
 
             mypath = 'lib/site/dist/zprsite/'
             onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
@@ -77,14 +77,18 @@ class CMakeBuild(build_ext):
             if os.path.exists('src/distribution/static/'):
                 rmtree('src/distribution/static/')
                 os.makedirs('src/distribution/static/')
-            if os.path.exists('src/distribution/templates/'):
-                rmtree('src/distribution/templates/')
-                os.makedirs('src/distribution/templates/')
 
-            for f in filter(lambda x: x != 'index.html', onlyfiles):
+            # if os.path.exists('src/distribution/templates/'):
+            #     rmtree('src/distribution/templates/')
+            #     os.makedirs('src/distribution/templates/')
+
+            # for f in filter(lambda x: x != 'index.html', onlyfiles):
+            #     copyfile(mypath + f, 'src/distribution/static/' + f)
+
+            for f in onlyfiles:
                 copyfile(mypath + f, 'src/distribution/static/' + f)
 
-            copyfile(mypath + 'index.html', 'src/distribution/templates/' + 'index.html')
+            # copyfile(mypath + 'index.html', 'src/distribution/templates/' + 'index.html')
 
             # copy files and change path
             #
