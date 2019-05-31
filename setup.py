@@ -1,19 +1,62 @@
 #! /usr/bin/env python3
 
+import distutils.cmd
+import distutils.log
 import os
-import re
-import sys
-import sysconfig
 import platform
+import re
 import subprocess
+import sys
+from distutils.version import LooseVersion
 from os import listdir
 from os.path import isfile, join
+from shutil import copyfile, copymode, rmtree
 
-from distutils.version import LooseVersion
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
-from setuptools.command.test import test as TestCommand
-from shutil import copyfile, copymode, rmtree
+
+
+class AngularBuild(distutils.cmd.Command):
+    description = 'run Pylint on Python source files'
+
+    def initialize_options(self):
+        return
+
+    def finalize_options(self):
+        return
+
+    sub_commands = []
+    user_options = []
+
+    def run(self):
+        build_site = True  # todo: temp
+        if build_site:
+            # SITE BUILD
+            subprocess.check_call('git pull', cwd='lib/site', shell=True)
+            subprocess.check_call('npm install', cwd='lib/site', shell=True)
+            subprocess.check_call('npm run ng build -- --prod --base-href ./', cwd='lib/site', shell=True)
+
+            mypath = 'lib/site/dist/zprsite/'
+            onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+
+            if os.path.exists('src/distribution/static/'):
+                rmtree('src/distribution/static/')
+                os.makedirs('src/distribution/static/')
+
+            # if os.path.exists('src/distribution/templates/'):
+            #     rmtree('src/distribution/templates/')
+            #     os.makedirs('src/distribution/templates/')
+
+            # for f in filter(lambda x: x != 'index.html', onlyfiles):
+            #     copyfile(mypath + f, 'src/distribution/static/' + f)
+
+            for f in onlyfiles:
+                copyfile(mypath + f, 'src/distribution/static/' + f)
+
+            # copyfile(mypath + 'index.html', 'src/distribution/templates/' + 'index.html')
+
+            # copy files and change path
+            #
 
 
 class CMakeExtension(Extension):
@@ -65,34 +108,6 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
-        build_site = True  # todo: temp
-        if build_site:
-            # SITE BUILD
-            subprocess.check_call('npm install', cwd='lib/site', shell=True)
-            subprocess.check_call('npm run ng build -- --prod --base-href ./', cwd='lib/site', shell=True)
-
-            mypath = 'lib/site/dist/zprsite/'
-            onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-
-            if os.path.exists('src/distribution/static/'):
-                rmtree('src/distribution/static/')
-                os.makedirs('src/distribution/static/')
-
-            # if os.path.exists('src/distribution/templates/'):
-            #     rmtree('src/distribution/templates/')
-            #     os.makedirs('src/distribution/templates/')
-
-            # for f in filter(lambda x: x != 'index.html', onlyfiles):
-            #     copyfile(mypath + f, 'src/distribution/static/' + f)
-
-            for f in onlyfiles:
-                copyfile(mypath + f, 'src/distribution/static/' + f)
-
-            # copyfile(mypath + 'index.html', 'src/distribution/templates/' + 'index.html')
-
-            # copy files and change path
-            #
-
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args,
                               cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args,
@@ -140,7 +155,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     ext_modules=[CMakeExtension('distribution/distribution')],
-    cmdclass=dict(build_ext=CMakeBuild),
+    cmdclass={'build_ext': CMakeBuild, 'site': AngularBuild},
     test_suite='tests',
     zip_safe=False,
     include_package_data=True,
