@@ -1,7 +1,12 @@
-from flask import Flask, render_template, request, Blueprint
+import json
+from os import getcwd
+from os import listdir
+from os.path import isfile, join
+
+from flask import Flask, render_template, request, Blueprint, send_from_directory
 from flask_cors import CORS
 
-from .workspace_helpers import *
+from .workspace_helpers import prepare_workspace, workspace_dir_name, scan_for_reports, read_csv_columns, File
 
 prepare_workspace()
 
@@ -11,9 +16,7 @@ CORS(app)
 reports = Blueprint(__name__,
                     'reports',
                     root_path=join(getcwd()),
-                    template_folder=join(getcwd(), workspace_dir_name),
-                    static_folder=join(workspace_dir_name, 'static'),
-                    static_url_path='/report_static')
+                    template_folder=join(getcwd(), workspace_dir_name))
 
 app.register_blueprint(reports)
 
@@ -65,6 +68,11 @@ def report_list():
 @app.route('/report/<report_name>')
 def see_report(report_name):
     return render_template('%s/index.html' % report_name)
+
+
+@app.route('/report/<report_name>/<file_name>')
+def see_report_static(report_name, file_name):
+    return send_from_directory(join(getcwd(), workspace_dir_name, report_name, report_name), file_name)
 
 
 if __name__ == '__main__':

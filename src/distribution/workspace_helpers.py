@@ -1,8 +1,8 @@
-import json
+import os
 from os import getcwd
 from os import listdir
-from os.path import isfile, join, isdir
-import os
+from os.path import join, isdir
+
 import pandas as pd
 
 workspace_dir_name = 'distribution_ws'
@@ -11,10 +11,10 @@ workspace_dir_name = 'distribution_ws'
 def prepare_workspace():
     if workspace_dir_name not in listdir(getcwd()):
         os.mkdir(workspace_dir_name)
-        os.mkdir(join(workspace_dir_name, 'static'))
-    else:
-        if 'static' not in listdir(join(getcwd(), workspace_dir_name)):
-            os.mkdir(join(workspace_dir_name, 'static'))
+        # os.mkdir(join(workspace_dir_name, 'static'))
+    # else:
+    #     if 'static' not in listdir(join(getcwd(), workspace_dir_name)):
+    #         os.mkdir(join(workspace_dir_name, 'static'))
 
 
 class File:
