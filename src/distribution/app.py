@@ -6,6 +6,7 @@ from os.path import isfile, join
 from flask import Flask, render_template, request, Blueprint, send_from_directory
 from flask_cors import CORS
 
+from .report import generate_report
 from .workspace_helpers import prepare_workspace, workspace_dir_name, scan_for_reports, read_csv_columns, File
 
 prepare_workspace()
@@ -56,7 +57,7 @@ def csv_info():
 @app.route('/api/report', methods=['POST'])
 def report_request():
     data = request.get_json()['data']
-    # set some var to 'working'
+    generate_report(data)
     return json.dumps({'status': 'done'})
 
 
