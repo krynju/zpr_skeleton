@@ -2,6 +2,9 @@ from os import path, getcwd, mkdir
 from time import strftime
 from .workspace_helpers import workspace_dir_name
 from matplotlib import pyplot as plt
+import pandas as pd
+import numpy as np
+import math
 
 report_remplate = '''
 <!DOCTYPE html>
@@ -14,8 +17,8 @@ report_remplate = '''
 </head>
 <body>
     <p>raport : {0} </p>
-    <img src="{0}/plot1.svg">
-
+    <img src="{0}/plot1.png">
+    <img src="{0}/plot2.png">
 </body>
 </html>
 '''
@@ -24,13 +27,13 @@ report_remplate = '''
 def generate_report(data):
     report_name = create_report_name(data[0]['filename'], data[1]['filename'])
     create_dirs(report_name)
-    create_static(report_name)
+    create_static(report_name, data)
     create_html(report_name)
-    return
+    return 'ok', report_name
 
 
 def create_report_name(file1_name, file2_name):
-    return '-'.join([file1_name, file2_name, strftime("%Y%m%d-%H%M%S")])
+    return '-'.join([strftime("%Y%m%d-%H%M%S"), file1_name[:-4], file2_name[:-4]])
 
 
 def create_dirs(report_name):
@@ -51,10 +54,69 @@ def create_html(report_name):
     return
 
 
-def create_static(report_name):
+def create_static(report_name, data):
     static_path = path.join(getcwd(), workspace_dir_name, report_name, report_name)
 
-    plt.plot([1, 2, 3, 4, 5], [1, 2, 3, 4, 5])
+    df_1 = pd.read_csv(data[0]['filename'], usecols=[data[0]['column']])
+    df_2 = pd.read_csv(data[1]['filename'], usecols=[data[1]['column']])
 
-    plt.savefig(path.join(static_path, 'plot1.svg'))
+    np_1 = df_1[data[0]['column']].values
+
+    np_2 = df_2[data[1]['column']].values
+
+    if data[0]['type'] == 'continuous' and data[1]['type'] == 'continuous':
+        create_qq_plots(np_1, np_2, static_path)
+    else:
+        create_histogram_plots(np_1, np_2, static_path)
+
     return
+
+
+def create_qq_sub(array1, array2):
+    # def quantiles(array, count):
+    #     q = np.ndarray(count)
+    #     for i in np.arange(count):
+    #         p = i / count
+    #         h = (array.size - 1) * p + 1 / 2
+    #         q[i] = (array[math.ceil(h - 1 / 2)] + array[math.floor(h + 1 / 2)]) / 2
+    #     return q
+
+    def quantiles(array, count):
+        q = np.ndarray(count)
+        N = array.size - 1
+        for i in np.arange(count):
+            p = i / count
+            h = (N - 1) * p + 1
+            q[i] = array[math.floor(h)] + (h - math.floor(h)) * (array[math.floor(h) + 1] - array[math.floor(h)])
+        return q
+
+    q_1 = quantiles(array1, array1.size)
+    q_2 = quantiles(array2, array1.size)
+
+    return q_1, q_2
+
+
+def create_qq_plots(array1, array2, static_path):
+    q_1, q_2 = create_qq_sub(array1, array2)
+    fig, ax = plt.subplots()
+    ax.scatter(q_1, q_2)
+    fig.savefig(path.join(static_path, 'plot1.svg'))
+    fig.savefig(path.join(static_path, 'plot1.png'))
+
+    q_1, q_2 = create_qq_sub(array2, array1)
+    fig, ax = plt.subplots()
+    ax.scatter(q_1, q_2)
+    fig.savefig(path.join(static_path, 'plot2.svg'))
+    fig.savefig(path.join(static_path, 'plot2.png'))
+
+
+def create_histogram_plots(np_1, np_2, static_path):
+    fig, ax = plt.subplots()
+    ax.hist(np_1, bins=100)
+    fig.savefig(path.join(static_path, 'plot1.svg'))
+    fig.savefig(path.join(static_path, 'plot1.png'))
+
+    fig, ax = plt.subplots()
+    ax.hist(np_2, bins=100)
+    fig.savefig(path.join(static_path, 'plot2.svg'))
+    fig.savefig(path.join(static_path, 'plot2.png'))
