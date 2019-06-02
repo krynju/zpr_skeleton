@@ -31,6 +31,12 @@ class MainTest(unittest.TestCase):
         self.assertTrue(np.array_equal(x, np.array([3, 4, 5])))
         self.assertTrue(np.array_equal(y, np.array([1, 2, 3])))
 
+    def test_quantiles(self):
+        a = np.array([1, 2, 3, 4, 5], dtype=np.double)
+        b = np.array([2.0, 2.6, 3.2, 3.8, 4.4], dtype=np.double)
+        self.assertTrue(np.array_equal(distribution.quantiles(a, 5), b))
+
+
 
 if __name__ == '__main__':
     unittest.main()

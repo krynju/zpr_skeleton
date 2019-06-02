@@ -5,6 +5,9 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 import math
+from .distribution import quantiles
+import time
+
 
 report_remplate = '''
 <!DOCTYPE html>
@@ -81,17 +84,38 @@ def create_qq_sub(array1, array2):
     #         q[i] = (array[math.ceil(h - 1 / 2)] + array[math.floor(h + 1 / 2)]) / 2
     #     return q
 
-    def quantiles(array, count):
-        q = np.ndarray(count)
-        N = array.size - 1
-        for i in np.arange(count):
-            p = i / count
-            h = (N - 1) * p + 1
-            q[i] = array[math.floor(h)] + (h - math.floor(h)) * (array[math.floor(h) + 1] - array[math.floor(h)])
-        return q
+    # def quantiles_p(array, count):
+    #     q = np.ndarray(count)
+    #     N = array.size - 1
+    #     for i in np.arange(count):
+    #         p = i / count
+    #         h = (N - 1) * p + 1
+    #         q[i] = array[math.floor(h)] + (h - math.floor(h)) * (array[math.floor(h) + 1] - array[math.floor(h)])
+    #     return q
+    #
+    #
+    # start = time.perf_counter_ns()
+    # q_1 = quantiles(array1, array1.size)
+    # end = time.perf_counter_ns()
+    # print(end - start)
+    #
+    # start = time.perf_counter_ns()
+    # q_2 = quantiles(array2, array1.size)
+    # end = time.perf_counter_ns()
+    # print(end - start)
+    #
+    # start = time.perf_counter_ns()
+    # q_1 = quantiles_p(array1, array1.size)
+    # end = time.perf_counter_ns()
+    # print(end - start)
+    #
+    # start = time.perf_counter_ns()
+    # q_2 = quantiles_p(array2, array1.size)
+    # end = time.perf_counter_ns()
+    # print(end - start)
 
-    q_1 = quantiles(array1, array1.size)
-    q_2 = quantiles(array2, array1.size)
+    # q_1 = quantiles(array1, array1.size)
+    # q_2 = quantiles(array2, array1.size)
 
     return q_1, q_2
 

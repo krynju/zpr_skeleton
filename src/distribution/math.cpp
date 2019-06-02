@@ -1,5 +1,6 @@
 #include "math.hpp"
 #include <pybind11/pybind11.h>
+#include <cmath>
 #include <pybind11/numpy.h>
 #include <iostream>
 #include <vector>
@@ -54,8 +55,8 @@ std::pair<py::array_t<double>, py::array_t<double>> generateQQ(py::array_t<doubl
     std::vector<double> v1(begin1, begin1+data1.shape(0));
     std::vector<double> v2(begin2, begin2+data2.shape(0));
 
-//    std::sort(v1.begin(), v1.end());
-//    std::sort(v2.begin(), v2.end());
+    std::sort(v1.begin(), v1.end());
+    std::sort(v2.begin(), v2.end());
 
     auto x = py::array_t<double>(size);
     double *ptr_x = (double *)x.request().ptr;
@@ -68,4 +69,43 @@ std::pair<py::array_t<double>, py::array_t<double>> generateQQ(py::array_t<doubl
         ptr_y[i] = v2[v2.size()*i/size];
     }
     return std::pair<py::array_t<double>, py::array_t<double>>(x, y);
+}
+
+py::array_t<double> quantiles(py::array_t<double> input, int count) {
+    auto q = py::array_t<double>(count);
+
+    long int N = input.size() - 1;
+    double p, h;
+
+    auto array = static_cast<double *>(input.request().ptr);
+    auto q_ptr = static_cast<double *>(q.request().ptr);
+
+    int f_h = 0;
+    for (int i = 0; i < count; ++i) {
+        p = 1.0 * i / count;
+        h = (N - 1) * p + 1;
+
+        f_h = static_cast<int>(std::floor(h));
+        q_ptr[i] = array[f_h] + (h - f_h) * (array[f_h + 1] - array[f_h]);
+    }
+
+    return q;
+}
+
+std::vector<double> quantiles_vec(std::vector<double> &input, int count) {
+    auto q = std::vector<double>(count);
+
+    int N = input.size() - 1;
+    double p, h;
+
+
+    int f_h = 0;
+    for (int i = 0; i < count; ++i) {
+        p = 1.0 * i / count;
+        h = (N - 1) * p + 1;
+        f_h = static_cast<int>(std::floor(h));
+        q[i] = input[f_h] + (h - f_h) * (input[f_h + 1] - input[f_h]);
+    }
+
+    return q;
 }
