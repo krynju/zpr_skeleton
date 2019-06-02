@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <vector>
+#include <algorithm>
 
 namespace py = pybind11;
 
@@ -32,11 +33,18 @@ template<typename T>
 py::array_t<double> quantiles(py::array_t<T> input, int count) {
     auto q = py::array_t<double>(count);
 
+
     long int N = input.size() - 1;
     double p, h;
 
     auto array = static_cast<double *>(input.request().ptr);
     auto q_ptr = static_cast<double *>(q.request().ptr);
+
+    std::sort(q_ptr, q_ptr + input.size());
+
+//    // "direct access" for now same speed
+//    auto array = input.unchecked<1>();
+//    auto q_ptr = q.mutable_unchecked<1>();
 
     int f_h = 0;
     for (int i = 0; i < count; ++i) {
@@ -44,6 +52,8 @@ py::array_t<double> quantiles(py::array_t<T> input, int count) {
         h = (N - 1) * p + 1;
         f_h = static_cast<int>(std::floor(h));
         q_ptr[i] = array[f_h] + (h - f_h) * (array[f_h + 1] - array[f_h]);
+//        // "direct access" for now same speed
+//        q_ptr(i) = array(f_h) + (h - f_h) * (array(f_h + 1) - array(f_h));
     }
     return q;
 }

@@ -84,7 +84,8 @@ def create_qq_sub(array1, array2):
     #         q[i] = (array[math.ceil(h - 1 / 2)] + array[math.floor(h + 1 / 2)]) / 2
     #     return q
 
-    # def quantiles_p(array, count):
+    # def quantiles_python(array, count):
+    #     array.sort()
     #     q = np.ndarray(count)
     #     N = array.size - 1
     #     for i in np.arange(count):
@@ -93,47 +94,54 @@ def create_qq_sub(array1, array2):
     #         q[i] = array[math.floor(h)] + (h - math.floor(h)) * (array[math.floor(h) + 1] - array[math.floor(h)])
     #     return q
     #
+    # np.random.shuffle(array1)
+    # np.random.shuffle(array2)
     #
     # start = time.perf_counter_ns()
     # q_1 = quantiles(array1, array1.size)
     # end = time.perf_counter_ns()
     # print(end - start)
     #
+    # np.random.shuffle(array1)
+    # np.random.shuffle(array2)
     # start = time.perf_counter_ns()
     # q_2 = quantiles(array2, array1.size)
     # end = time.perf_counter_ns()
     # print(end - start)
-    #
+    # np.random.shuffle(array1)
+    # np.random.shuffle(array2)
     # start = time.perf_counter_ns()
-    # q_1 = quantiles_p(array1, array1.size)
+    # q_1 = quantiles_python(array1, array1.size)
     # end = time.perf_counter_ns()
     # print(end - start)
-    #
+    # np.random.shuffle(array1)
+    # np.random.shuffle(array2)
     # start = time.perf_counter_ns()
-    # q_2 = quantiles_p(array2, array1.size)
+    # q_2 = quantiles_python(array2, array1.size)
     # end = time.perf_counter_ns()
     # print(end - start)
 
-    # q_1 = quantiles(array1, array1.size)
-    # q_2 = quantiles(array2, array1.size)
+    q_1 = quantiles(array1, array1.size)
+    q_2 = quantiles(array2, array1.size)
 
     return q_1, q_2
 
 
 def create_qq_plots(array1, array2, static_path):
-    array1.sort()
-    array2.sort()
+
 
     q_1, q_2 = create_qq_sub(array1, array2)
     fig, ax = plt.subplots()
     ax.scatter(q_1, q_2)
-    fig.savefig(path.join(static_path, 'plot1.svg'))
+    if len(array1) < 11000 and len(array2) < 11000:
+        fig.savefig(path.join(static_path, 'plot1.svg'))
     fig.savefig(path.join(static_path, 'plot1.png'))
 
     q_1, q_2 = create_qq_sub(array2, array1)
     fig, ax = plt.subplots()
     ax.scatter(q_1, q_2)
-    fig.savefig(path.join(static_path, 'plot2.svg'))
+    if len(array1) < 11000 and len(array2) < 11000:
+        fig.savefig(path.join(static_path, 'plot2.svg'))
     fig.savefig(path.join(static_path, 'plot2.png'))
 
 
