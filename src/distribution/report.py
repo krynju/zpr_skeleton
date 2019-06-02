@@ -97,6 +97,9 @@ def create_qq_sub(array1, array2):
 
 
 def create_qq_plots(array1, array2, static_path):
+    array1.sort()
+    array2.sort()
+
     q_1, q_2 = create_qq_sub(array1, array2)
     fig, ax = plt.subplots()
     ax.scatter(q_1, q_2)
