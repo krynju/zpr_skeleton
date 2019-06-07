@@ -29,7 +29,6 @@ class AngularBuild(distutils.cmd.Command):
     user_options = []
 
     def run(self):
-        subprocess.check_call('git pull', cwd='lib/site', shell=True)
         subprocess.check_call('npm install', cwd='lib/site', shell=True)
         subprocess.check_call('npm run ng build -- --prod --base-href ./', cwd='lib/site', shell=True)
 
@@ -39,6 +38,8 @@ class AngularBuild(distutils.cmd.Command):
         if os.path.exists('src/distribution/static/'):
             rmtree('src/distribution/static/')
             os.makedirs('src/distribution/static/')
+
+        os.mkdir('src/distribution/static')
 
         for f in onlyfiles:
             copyfile(mypath + f, 'src/distribution/static/' + f)
