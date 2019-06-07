@@ -1,3 +1,8 @@
+'''
+.. module:: report
+   :synopsis: This module contains functions used to generate report from raw data
+'''
+
 from os import path, getcwd, mkdir
 from time import strftime
 import numpy as np
@@ -38,7 +43,9 @@ report_remplate = '''
 
 
 class Report:
-
+    '''
+    This class represents the processed report
+    '''
     def __init__(self, data):
         self.filename1 = data[0]['filename']
         self.filename2 = data[1]['filename']
@@ -53,6 +60,7 @@ class Report:
 
     def generate(self):
         '''
+
         :param data:
         :return:
         '''
@@ -62,6 +70,11 @@ class Report:
         return 'ok', self.report_name
 
     def create_report_name(self, file1_name, file2_name):
+        '''
+        :param file1_name: name of the first file
+        :param file2_name: name of the second file
+        :return: combined name, indcluding the time of generation
+        '''
         return '-'.join([strftime("%Y%m%d-%H%M%S"), file1_name[:-4], file2_name[:-4]])
 
     def create_dirs(self):
@@ -97,7 +110,7 @@ class Report:
 
     def create_qq_plots(self, array1, array2):
         '''
-        Function
+        Calls fucnctions that calculate quantiles and plots the resulting data
         :param array1:
         :param array2:
         :param static_path:
