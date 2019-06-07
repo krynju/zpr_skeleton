@@ -39,7 +39,7 @@ py::array_t<double> quantiles(py::array_t<T> input, int count) {
     long int N = input.size() - 1;
     double p, h;
 
-    auto array = static_cast<double *>(input.request().ptr);
+    auto array = static_cast<T *>(input.request().ptr);
     auto q_ptr = static_cast<double *>(q.request().ptr);
 
     std::sort(q_ptr, q_ptr + input.size());
