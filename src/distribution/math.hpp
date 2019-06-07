@@ -1,7 +1,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 #include <vector>
 #include <algorithm>
+#include <map>
 
 namespace py = pybind11;
 
@@ -59,3 +61,5 @@ py::array_t<double> quantiles(py::array_t<T> input, int count) {
 }
 
 std::vector<double> quantiles_vec(std::vector<double> &input, int count);
+
+std::map<std::string, int> histogram(const py::array &input);

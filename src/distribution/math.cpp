@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <array>
+#include <map>
 
 namespace py = pybind11;
 
@@ -109,3 +111,15 @@ std::vector<double> quantiles_vec(std::vector<double> &input, int count) {
 
     return q;
 }
+
+std::map<std::string, int> histogram(const py::array &input) {
+    std::map<std::string, int> histogram;
+    for (int i = 0; i < input.size(); ++i) {
+        auto ptr = static_cast<const unsigned int *>(input.data(i));
+        std::string temp(ptr, ptr + (input.itemsize() / 4));
+        ++histogram[temp];
+    }
+    return histogram;
+}
+
+

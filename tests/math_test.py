@@ -36,6 +36,11 @@ class MainTest(unittest.TestCase):
         b = np.array([2.0, 2.6, 3.2, 3.8, 4.4], dtype=np.double)
         self.assertTrue(np.array_equal(distribution.quantiles(a, 5), b))
 
+    def test_histogram(self):
+        a = np.array(["bcd", "cde", "abc", "abc", "xyee"])
+        d = distribution.histogram(a)
+        self.assertTrue(distribution.histogram(a) == d)
+
 
 
 if __name__ == '__main__':
