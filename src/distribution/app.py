@@ -1,3 +1,10 @@
+"""
+.. module:: controller
+   :synopsis: All endpoints of the aplication are defined here
+
+"""
+
+
 import json
 from os import getcwd
 from os import listdir
