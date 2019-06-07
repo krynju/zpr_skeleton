@@ -118,7 +118,7 @@ class CMakeBuild(build_ext):
         '''
         Copy ``src_file`` to ``dest_file`` ensuring parent directory exists.
         By default, message like `creating directory /path/to/package` and
-        `copying directory /src/path/to/package -> path/to/package` are displayed on standard output. Adapted from scikit-build.
+        `copying directory /src/path/to/package -> path/to/package` are displayed on standard output
         '''
         # Create directory if needed
         dest_dir = os.path.join(os.path.dirname(
