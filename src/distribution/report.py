@@ -11,7 +11,6 @@ from matplotlib import pyplot as plt
 
 from .distribution import quantiles, histogram
 from .workspace_helpers import workspace_dir_name
-from functools import reduce
 
 report_remplate = '''
     <!DOCTYPE html>
@@ -60,7 +59,6 @@ class Report:
 
     def generate(self):
         '''
-
         :param data:
         :return:
         '''
@@ -94,7 +92,7 @@ class Report:
     def create_static(self):
 
         df_1 = pd.read_csv(self.filename1, usecols=[self.columnname1])
-        df_2 = pd.read_csv(self.filename1, usecols=[self.columnname2])
+        df_2 = pd.read_csv(self.filename2, usecols=[self.columnname2])
 
         np_1 = df_1[self.data[0]['column']].values
 
@@ -130,7 +128,7 @@ class Report:
             ax.set_xlabel(filename)
             ax.set_ylabel(filename_vs)
             ax.set_title('Q-Q plot ' + filename + ' vs ' + filename_vs)
-
+            fig.tight_layout()
             if len(array1) < 11000 and len(array2) < 11000:
                 fig.savefig(path.join(self.static_path, plotname + '.svg'))
             fig.savefig(path.join(self.static_path, plotname + '.png'))
@@ -144,6 +142,7 @@ class Report:
             ax.set_ylabel(filename_vs)
             ax.set_title('Analysis ' + filename + ' vs ' + filename_vs + ' - dissimilarity = ' + str(np.average(a3)))
             ax.plot(a1, a3)
+            fig.tight_layout()
             ax.set_yticks(np.arange(0, 1.0, 0.2))
             fig.savefig(path.join(self.static_path, plotname + '.png'))
 
@@ -155,7 +154,7 @@ class Report:
         plot(q_1, q_2, self.filename2, self.filename1, 'plot2')
         analyse(q_1, q_2, self.filename2, self.filename1, 'plot4')
 
-    def create_histogram_plots(self, np_1, np_2, ):
+    def create_histogram_plots(self, np_1, np_2):
         def create_histogram_sub(np_1, np_2):
             d_1 = histogram(np_1)
             d_2 = histogram(np_2)
@@ -164,34 +163,70 @@ class Report:
 
         def plot(_q_1, filename, plotname):
             fig, ax = plt.subplots()
-            keys = list(map(lambda x: x.strip('\x00'), d_1.keys()))
-            ax.bar(keys, d_1.values())
+            keys = list(map(lambda x: x.strip('\x00'), _q_1.keys()))
+            ax.bar(keys, _q_1.values())
             ax.set_title('Histogram - ' + filename)
+            fig.tight_layout()
             fig.savefig(path.join(self.static_path, plotname + '.svg'))
             fig.savefig(path.join(self.static_path, plotname + '.png'))
 
         def analyse(_q_1, _q_2, filename, filename_vs, plotname):
-            a = [*_q_1.keys(), *_q_2.keys()]
-            d = dict(keys=a, values=np.zeros(len(np.unique(a)), dtype=int))
+            d = {**_q_1, **_q_2}
+            sum = np.sum(list(_q_1.values()))
+            for k in _q_1.keys():
+                d[k] = _q_1[k] / sum
 
-            # sum = np.sum(_q_1.values())
-            # for k in _q_1.keys():
-            #     d[k] += _q_1[k] / sum
-            #
-            # sum = np.sum(_q_2.values())
-            # for k in _q_2.keys():
-            #     d[k] -= _q_2[k] / sum
+            sum = np.sum(list(_q_2.values()))
+            for k in _q_2.keys():
+                d[k] -= _q_2[k] / sum
 
-            # fig, ax = plt.subplots()
-            # ax.set_xlabel(filename)
-            # ax.set_ylabel(filename_vs)
-            # ax.set_title('Analysis ' + filename + ' vs ' + filename_vs + ' - dissimilarity = ' + str(np.average(a3)))
-            # ax.plot(a1, a3)
-            # ax.set_yticks(np.arange(0, 1.0, 0.2))
-            # fig.savefig(path.join(self.static_path, plotname + '.png'))
+            for k in d.keys():
+                d[k] = d[k] ** 2
+
+            keys = list(map(lambda x: x.strip('\x00'), d.keys()))
+
+            fig, ax = plt.subplots()
+            ax.set_xlabel(filename)
+            ax.set_ylabel(filename_vs)
+            ax.set_title('Analysis ' + filename + ' vs ' + filename_vs + ' - dissimilarity = ' + str(
+                np.average(list(d.values()))))
+            ax.bar(keys, d.values())
+            fig.tight_layout()
+            ax.set_yticks(np.arange(0, 1.0, 0.2))
+            fig.savefig(path.join(self.static_path, plotname + '.png'))
+
+        def double_bar_chart(_q_1, _q_2, filename, filename_vs, plotname):
+            d = {**_q_1, **_q_2}
+
+            dd = {key: np.zeros(2, dtype=float) for key in d.keys()}
+
+            sum = np.sum(list(_q_1.values()))
+            for k in _q_1.keys():
+                oi = dd[k]
+                oi[0] = 1.0 * _q_1[k] / sum
+
+            sum = np.sum(list(_q_2.values()))
+            for k in _q_2.keys():
+                oi = dd[k]
+                oi[1] = 1.0 * _q_2[k] / sum
+
+            ind = np.arange(len(dd.keys()))  # the x locations for the groups
+            width = 1.0 / len(dd.keys())
+
+            fig, ax = plt.subplots()
+
+            ax.set_title('Normalised bar chart ' + filename + ' vs ' + filename_vs)
+
+            ax.bar(ind - width / 2, list(map(lambda x: x[0], dd.values())), width)
+            ax.bar(ind + width / 2, list(map(lambda x: x[1], dd.values())), width)
+            ax.set_xticks(ind)
+            ax.set_xticklabels(list(map(lambda x: x.strip('\x00'), d.keys())))
+            fig.tight_layout()
+            fig.savefig(path.join(self.static_path, plotname + '.png'))
 
         d_1, d_2 = create_histogram_sub(np_1, np_2)
 
         plot(d_1, self.filename1, 'plot1')
         plot(d_2, self.filename2, 'plot2')
         analyse(d_1, d_2, self.filename1, self.filename2, 'plot3')
+        double_bar_chart(d_1, d_2, self.filename1, self.filename2, 'plot4')

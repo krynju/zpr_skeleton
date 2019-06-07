@@ -28,14 +28,9 @@ py::array_t<int> increment_array(const py::array_t<int> &input);
 
 std::pair<int, int> create_tuple(int x, int y);
 
-std::pair<py::array_t<double>, py::array_t<double>>
-generateQQ(py::array_t<double> data1, py::array_t<double> data2, int size);
-
 template<typename T>
 py::array_t<double> quantiles(py::array_t<T> input, int count) {
     auto q = py::array_t<double>(count);
-
-
     long int N = input.size() - 1;
     double p, h;
 
@@ -54,7 +49,5 @@ py::array_t<double> quantiles(py::array_t<T> input, int count) {
     }
     return q;
 }
-
-std::vector<double> quantiles_vec(std::vector<double> &input, int count);
 
 std::map<std::string, int> histogram(const py::array &input);
