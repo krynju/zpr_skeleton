@@ -4,15 +4,15 @@ from os import listdir
 from os.path import isfile, join
 
 from flask import Flask, render_template, request, Blueprint, send_from_directory
-#from flask_cors import CORS
+from flask_cors import CORS
 
-from .report import generate_report
+from .report import Report
 from .workspace_helpers import prepare_workspace, workspace_dir_name, scan_for_reports, read_csv_columns, File
 
 prepare_workspace()
 
 app = Flask(__name__, template_folder="static", static_url_path='')
-#CORS(app)
+CORS(app)
 
 reports = Blueprint(__name__,
                     'reports',
@@ -61,8 +61,8 @@ def csv_info():
 @app.route('/api/report', methods=['POST'])
 def report_request():
     data = request.get_json()['data']
-    print(data)
-    status, report_name = generate_report(data)
+    r = Report(data)
+    status, report_name = r.generate()
     return json.dumps({'status': status, 'report_name': report_name})
 
 
