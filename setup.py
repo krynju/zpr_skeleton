@@ -37,9 +37,11 @@ class AngularBuild(distutils.cmd.Command):
 
         if os.path.exists('src/distribution/static/'):
             rmtree('src/distribution/static/')
-            os.makedirs('src/distribution/static/')
+            os.mkdir('src/distribution/static')
+        else:
+            os.mkdir('src/distribution/static')
 
-        os.mkdir('src/distribution/static')
+
 
         for f in onlyfiles:
             copyfile(mypath + f, 'src/distribution/static/' + f)
