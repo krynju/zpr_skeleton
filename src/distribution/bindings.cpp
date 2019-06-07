@@ -34,8 +34,6 @@ PYBIND11_MODULE(distribution, m) {
 
     m.def("create_tuple", &create_tuple);
 
-    m.def("generateQQ", &generateQQ);
-
     m.def("quantiles", &quantiles<int>);
 
     m.def("quantiles", &quantiles<double>);
