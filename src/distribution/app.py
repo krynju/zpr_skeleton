@@ -4,7 +4,7 @@ from os import listdir
 from os.path import isfile, join
 
 from flask import Flask, render_template, request, Blueprint, send_from_directory
-from flask_cors import CORS
+#from flask_cors import CORS
 
 from .report import generate_report
 from .workspace_helpers import prepare_workspace, workspace_dir_name, scan_for_reports, read_csv_columns, File
@@ -12,7 +12,7 @@ from .workspace_helpers import prepare_workspace, workspace_dir_name, scan_for_r
 prepare_workspace()
 
 app = Flask(__name__, template_folder="static", static_url_path='')
-CORS(app)
+#CORS(app)
 
 reports = Blueprint(__name__,
                     'reports',
@@ -24,6 +24,10 @@ app.register_blueprint(reports)
 
 @app.route('/')
 def root():
+    """
+    function description
+    :return: return value
+    """
     return render_template('index.html')
 
 

@@ -1,14 +1,13 @@
+
 Example documentation for a hybrid Python/C++ project
 =====================================================
-
-Contents:
 
 .. toctree::
    :maxdepth: 2
 
-   python_code
+   moduly
 
-   cpp_code
+   cpp_functions
 
 Indices and tables
 ==================

@@ -27,6 +27,11 @@ report_remplate = '''
 
 
 def generate_report(data):
+    '''
+
+    :param data:
+    :return:
+    '''
     report_name = create_report_name(data[0]['filename'], data[1]['filename'])
     create_dirs(report_name)
     create_static(report_name, data)
@@ -87,6 +92,13 @@ def create_qq_sub(array1, array2):
 
 
 def create_qq_plots(array1, array2, static_path):
+    '''
+    Function
+    :param array1:
+    :param array2:
+    :param static_path:
+    :return:
+    '''
     q_1, q_2 = create_qq_sub(array1, array2)
     fig, ax = plt.subplots()
     ax.scatter(q_1, q_2)
