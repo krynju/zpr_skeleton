@@ -94,6 +94,7 @@ py::array_t<double> quantiles(py::array_t<double> input, int count) {
     return q;
 }
 
+// remove this
 std::vector<double> quantiles_vec(std::vector<double> &input, int count) {
     auto q = std::vector<double>(count);
 
@@ -116,7 +117,7 @@ std::map<std::string, int> histogram(const py::array &input) {
     std::map<std::string, int> histogram;
     for (int i = 0; i < input.size(); ++i) {
         auto ptr = static_cast<const unsigned int *>(input.data(i));
-        std::string temp(ptr, ptr + (input.itemsize() / 4));
+        std::string temp(ptr, ptr + (input.itemsize() / sizeof(unsigned int)));
         ++histogram[temp];
     }
     return histogram;

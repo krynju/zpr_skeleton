@@ -41,7 +41,4 @@ PYBIND11_MODULE(distribution, m) {
     m.def("quantiles", &quantiles<double>);
 
     m.def("histogram", &histogram);
-
-
-
 }

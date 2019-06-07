@@ -1,4 +1,4 @@
-python\_cpp\_example\.subtract
+distribution\.subtract
 ==============================
 
 .. currentmodule:: distribution

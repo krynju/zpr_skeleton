@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 import math
-from .distribution import quantiles
+from .distribution import quantiles, histogram
 import time
 
 report_remplate = '''
@@ -68,58 +68,18 @@ def create_static(report_name, data):
 
     if data[0]['type'] == 'continuous' and data[1]['type'] == 'continuous':
         create_qq_plots(np_1, np_2, static_path)
-    else:
+    elif data[0]['type'] == 'discrete' and data[1]['type'] == 'discrete':
+        np_1 = np_1.astype('U')
+        np_2 = np_2.astype('U')
         create_histogram_plots(np_1, np_2, static_path)
+    else:
+        #
+        pass
 
     return
 
 
 def create_qq_sub(array1, array2):
-    # def quantiles(array, count):
-    #     q = np.ndarray(count)
-    #     for i in np.arange(count):
-    #         p = i / count
-    #         h = (array.size - 1) * p + 1 / 2
-    #         q[i] = (array[math.ceil(h - 1 / 2)] + array[math.floor(h + 1 / 2)]) / 2
-    #     return q
-
-    # def quantiles_python(array, count):
-    #     array.sort()
-    #     q = np.ndarray(count)
-    #     N = array.size - 1
-    #     for i in np.arange(count):
-    #         p = i / count
-    #         h = (N - 1) * p + 1
-    #         q[i] = array[math.floor(h)] + (h - math.floor(h)) * (array[math.floor(h) + 1] - array[math.floor(h)])
-    #     return q
-    #
-    # np.random.shuffle(array1)
-    # np.random.shuffle(array2)
-    #
-    # start = time.perf_counter_ns()
-    # q_1 = quantiles(array1, array1.size)
-    # end = time.perf_counter_ns()
-    # print(end - start)
-    #
-    # np.random.shuffle(array1)
-    # np.random.shuffle(array2)
-    # start = time.perf_counter_ns()
-    # q_2 = quantiles(array2, array1.size)
-    # end = time.perf_counter_ns()
-    # print(end - start)
-    # np.random.shuffle(array1)
-    # np.random.shuffle(array2)
-    # start = time.perf_counter_ns()
-    # q_1 = quantiles_python(array1, array1.size)
-    # end = time.perf_counter_ns()
-    # print(end - start)
-    # np.random.shuffle(array1)
-    # np.random.shuffle(array2)
-    # start = time.perf_counter_ns()
-    # q_2 = quantiles_python(array2, array1.size)
-    # end = time.perf_counter_ns()
-    # print(end - start)
-
     q_1 = quantiles(array1, array1.size)
     q_2 = quantiles(array2, array1.size)
 
@@ -142,13 +102,24 @@ def create_qq_plots(array1, array2, static_path):
     fig.savefig(path.join(static_path, 'plot2.png'))
 
 
+def create_histogram_sub(np_1, np_2):
+    d_1 = histogram(np_1)
+    d_2 = histogram(np_2)
+
+    return d_1, d_2
+
+
 def create_histogram_plots(np_1, np_2, static_path):
+    d_1, d_2 = create_histogram_sub(np_1, np_2)
+
     fig, ax = plt.subplots()
-    ax.hist(np_1, bins=100)
+    keys = list(map(lambda x: x.strip('\x00'), d_1.keys()))
+    ax.bar(keys, d_1.values())
     fig.savefig(path.join(static_path, 'plot1.svg'))
     fig.savefig(path.join(static_path, 'plot1.png'))
 
     fig, ax = plt.subplots()
-    ax.hist(np_2, bins=100)
+    keys = list(map(lambda x: x.strip('\x00'), d_2.keys()))
+    ax.bar(keys, d_2.values())
     fig.savefig(path.join(static_path, 'plot2.svg'))
     fig.savefig(path.join(static_path, 'plot2.png'))

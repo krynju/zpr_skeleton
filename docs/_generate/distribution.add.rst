@@ -1,4 +1,4 @@
-python\_cpp\_example\.add
+distribution\.add
 =========================
 
 .. currentmodule:: distribution

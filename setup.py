@@ -29,34 +29,20 @@ class AngularBuild(distutils.cmd.Command):
     user_options = []
 
     def run(self):
-        build_site = True  # todo: temp
-        if build_site:
-            # SITE BUILD
-            subprocess.check_call('git pull', cwd='lib/site', shell=True)
-            subprocess.check_call('npm install', cwd='lib/site', shell=True)
-            subprocess.check_call('npm run ng build -- --prod --base-href ./', cwd='lib/site', shell=True)
+        subprocess.check_call('git pull', cwd='lib/site', shell=True)
+        subprocess.check_call('npm install', cwd='lib/site', shell=True)
+        subprocess.check_call('npm run ng build -- --prod --base-href ./', cwd='lib/site', shell=True)
 
-            mypath = 'lib/site/dist/zprsite/'
-            onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+        mypath = 'lib/site/dist/zprsite/'
+        onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-            if os.path.exists('src/distribution/static/'):
-                rmtree('src/distribution/static/')
-                os.makedirs('src/distribution/static/')
+        if os.path.exists('src/distribution/static/'):
+            rmtree('src/distribution/static/')
+            os.makedirs('src/distribution/static/')
 
-            # if os.path.exists('src/distribution/templates/'):
-            #     rmtree('src/distribution/templates/')
-            #     os.makedirs('src/distribution/templates/')
+        for f in onlyfiles:
+            copyfile(mypath + f, 'src/distribution/static/' + f)
 
-            # for f in filter(lambda x: x != 'index.html', onlyfiles):
-            #     copyfile(mypath + f, 'src/distribution/static/' + f)
-
-            for f in onlyfiles:
-                copyfile(mypath + f, 'src/distribution/static/' + f)
-
-            # copyfile(mypath + 'index.html', 'src/distribution/templates/' + 'index.html')
-
-            # copy files and change path
-            #
 
 
 class CMakeExtension(Extension):

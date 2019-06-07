@@ -57,6 +57,7 @@ def csv_info():
 @app.route('/api/report', methods=['POST'])
 def report_request():
     data = request.get_json()['data']
+    print(data)
     status, report_name = generate_report(data)
     return json.dumps({'status': status, 'report_name': report_name})
 
