@@ -22,7 +22,7 @@ class MainTest(unittest.TestCase):
         self.assertTrue(np.array_equal(distribution.increment_array(np.array([1, 2, 3], dtype=int)), np.array([2,3,4])))
 
     def test_create_tuple(self):
-        self.assertEqual(distribution.create_tuple(2, 69), (2,69))
+        self.assertEqual(distribution.create_tuple(2, 66), (2, 66))
 
     def test_generateQQ(self):
         a = np.array([4,3,5], dtype=np.double)
@@ -35,6 +35,19 @@ class MainTest(unittest.TestCase):
         a = np.array([1, 2, 3, 4, 5], dtype=int)
         b = np.array([2.0, 2.6, 3.2, 3.8, 4.4], dtype=np.double)
         self.assertTrue(np.array_equal(distribution.quantiles(a, 5), b))
+
+        a = np.array([1,2], dtype=int)
+        b = np.array([2.0], dtype=np.double)
+        self.assertTrue(np.array_equal(distribution.quantiles(a, 1), b))
+
+        a = np.array([1, 2, 3], dtype=int)
+        b = np.array([2.0], dtype=np.double)
+        self.assertTrue(np.array_equal(distribution.quantiles(a, 1), b))
+
+        a = np.array([1, 1, 1], dtype=int)
+        b = np.array([1], dtype=np.double)
+        self.assertTrue(np.array_equal(distribution.quantiles(a, 1), b))
+
 
     def test_histogram(self):
         a = np.array(["bcd", "cde", "abc", "abc", "xyee"])
