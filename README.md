@@ -10,11 +10,9 @@ This project contains:
 
 ## clone and prepare the environment
 
-Main dependencies: Boost1.70 and Python3.7
+Main dependencies: Python3.7
 
-also requires Boost.Python and Boost.Python.Numpy compiled 
-
-On windows run from *Developer Command Prompt for VS 2017* for cl.exe environment variables
+On windows run from *Developer Command Prompt for VS 2017* for cl.exe environment variables or just run it from Powershell
 
 When cloning remember about `--recursive flag`
 
@@ -34,6 +32,11 @@ Install other requirements
 `pip -r install requirements.txt`
 
 
+Build the frontend (requires nodejs and npm)
+
+`python setup.py site` -- necessary to build the frontend
+
+
 ## run
 
 Run all tests
@@ -42,9 +45,11 @@ Run all tests
 
 Install and run
 
+`python setup.py site` -- necessary to build the frontend
+
 `python setup.py install`
 
-`python -m python_cpp_example`
+`python -m distribution`
 
 
 

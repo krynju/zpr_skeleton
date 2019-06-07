@@ -60,7 +60,7 @@ class Report:
 
     def generate(self):
         '''
-        Tis function is called every time a new report is generated. It initiates the process of creating the report
+        This function is called every time a new report is generated. It initiates the process of creating the report
         '''
         self.create_dirs()
         self.create_static()
